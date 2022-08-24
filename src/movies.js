@@ -60,8 +60,93 @@ function orderAlphabetically(moviesArray) {
 
 }
 
-// BONUS - Iteration 7: Time Format - Turn duration of the movies from hours to minutes
-function turnHoursToMinutes(moviesArray) {}
 
-// BONUS - Iteration 8: Best yearly score average - Best yearly score average
-function bestYearAvg(moviesArray) {}
+
+// BONUS - Iteration 7: Time Format - Turn duration of the movies from hours to minutes
+// Let's imagine we want to turn "2h" to minutes
+function convertHours(hourString) {
+    // ["2", ""]
+    let calculateHour = hourString.split('h');
+    return calculateHour[0] * 60;
+    // "2" * 60
+    // 120
+  }
+  
+  // "33min"
+  function convertMinutes(minuteString) {
+    // ["33", ""]
+    let calculateMinutes = minuteString.split('min');
+    return Number(calculateMinutes[0]);
+    // return +(calculateMinutes[0]); // this is alternative fancier way
+    // 33
+  }
+  
+  function convertDuration(duration) {
+    let timePieces = duration.split(' ');
+    // ["2h", "33min"]
+    // ["2h"]
+    // ["33min"]
+  
+    let minutes = timePieces.reduce((sum, onePiece) => {
+      if (onePiece.includes('h')) {
+        return sum + convertHours(onePiece);
+      }
+      return sum + convertMinutes(onePiece);
+    }, 0);
+  
+    return minutes;
+  }
+  
+  function turnHoursToMinutes(movies) {
+    let newCentArray = movies.map((movie) => {
+      let newMovie = {};
+      newMovie.title = movie.title;
+      newMovie.year = movie.year;
+      newMovie.director = movie.director;
+      newMovie.duration = convertDuration(movie.duration);
+      newMovie.genre = movie.genre;
+      newMovie.score = movie.score;
+  
+      return newMovie;
+    });
+  
+    return newCentArray;
+  }
+  /* console.log(turnHoursToMinutes(movies))  */
+  
+  /////USING A COPY FROM THE ARRAY and MAP////
+  /* function turnHoursToMinutes(movies) {
+    let newCentArray = [...movies];
+     newCentArray.map((movie) => {
+      movie.duration = convertDuration(movie.duration);
+  
+    });
+    return newCentArray;
+  }
+  console.log(turnHoursToMinutes(movies)); */
+  
+  
+  // BONUS - Iteration 8: Best yearly score average - Best yearly score average
+  function bestYearAvg(movies) {
+    if (!movies.length) return null;
+  
+    let masterObject = {};
+  
+    movies.forEach((movie) => {
+      if (!masterObject[movie.year]) {
+        masterObject[movie.year] = [movie];
+      } else {
+        masterObject[movie.year].push(movie);
+      }
+    });
+  
+    let highest = 0;
+    let theActualYear;
+    for (let theYear in masterObject) {
+      if (scoresAverage(masterObject[theYear]) > highest) {
+        highest = scoresAverage(masterObject[theYear]);
+        theActualYear = theYear;
+      }
+    }
+    return `The best year was ${theActualYear} with an average score of ${highest}`;
+  }
